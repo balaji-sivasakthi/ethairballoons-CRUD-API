@@ -1,99 +1,101 @@
-const ethAirBalloons = require('ethairballoons');
-const path = require('path');
-const savePath = path.resolve(__dirname + '/contracts');
-const express = require('express')
-const app = express()
-const port = 3000
-app.use(express.json())
+const ethAirBalloons = require("ethairballoons");
+const path = require("path");
+const savePath = path.resolve(__dirname + "/contracts");
+const express = require("express");
+const app = express();
+const port = 3000;
+app.use(express.json());
 
-const ethAirBalloonsProvider = ethAirBalloons('http://127.0.0.1:7545', savePath); 
+const ethAirBalloonsProvider = ethAirBalloons(
+  "https://127.0.0.1:8545",
+  savePath
+);
 
 const Car = ethAirBalloonsProvider.createSchema({
-        name: "Car",
-        contractName: "carsContract",
-        properties: [
-            {
-                name: "model",
-                type: "bytes32",
-                primaryKey: true
-            },
-            {
-                name: "engine",
-                type: "bytes32",
-            },
-            {   name: "cylinders",
-                type: "uint"
-            }
-        ]
-    });
+  name: "Patient",
+  contractName: "patientContract",
+  properties: [
+    {
+      name: "mobile",
+      type: "uint",
+      primaryKey: true,
+    },
+    {
+      name: "name",
+      type: "bytes32",
+    },
+    { name: "age", type: "uint" },
+    { name: "symtoms", type: "bytes32" },
+  ],
+});
+Car.setAccount("0x9A6d82Ef3912d5aB60473124BCCd2f2A640769D7");
 
-app.get('/', (req, res) => {
-  res.send('EthairBalloons CRUD API!')
-})
+app.get("/", (req, res) => {
+  res.send("EthairBalloons CRUD API!");
+});
 
-app.get('/deploy', (req, res) => {
-    Car.deploy(function (err, success) {
-        if (!err) {
-            res.send("Contract deployed successfully!")
-        } else {
-            res.send("Contract deployment error" + err)
+app.get("/deploy", (req, res) => {
+  Car.deploy(function (err, success) {
+    if (!err) {
+      res.send("Contract deployed successfully!");
+    } else {
+      res.send("Contract deployment error" + err);
     }
-  })
-})
-
-app.post('/create', (req,res) => {
-    var newCarObject = {model:'Audi A4', engine: 'V8', wheels: 4};
-    Car.save(newCarObject, function (err, objectSaved) {
-        if (!err) {
-            res.json(objectSaved);
-        } else {
-            res.send(err)
-        }
+  });
 });
-})
 
-app.patch('/update/:id', (req,res) => {
-    const newCarObject = req.body;
-    Car.updateById(req.params.id, newCarObject, function (err, objectSaved) {
-        if (!err) {
-            res.json(objectSaved);
-        } else {
-            res.send(err)
-        }
+app.post("/create", (req, res) => {
+  var newPatientObject = { mobile: 962666685, name: "Balaji", age: 20 };
+  Car.save(newPatientObject, function (err, objectSaved) {
+    if (!err) {
+      res.json(objectSaved);
+    } else {
+      res.send(err);
+    }
+  });
 });
-})
 
-app.get('/find', (req,res) => {
-    Car.find(function (err, allObjects) {
-        if (!err) {
-            res.json(allObjects);
-        } else {
-            res.send(err)
-        }
+app.patch("/update/:id", (req, res) => {
+  const newPatientObject = req.body;
+  Car.updateById(req.params.id, newPatientObject, function (err, objectSaved) {
+    if (!err) {
+      res.json(objectSaved);
+    } else {
+      res.send(err);
+    }
+  });
 });
-})
 
-app.get('/find/:id', (req,res) => {
-    Car.findById(req.params.id, function (err, found) {
-        if (!err) {
-            res.json(found);
-        } else {
-            res.send(err)
-        }
+app.get("/find", (req, res) => {
+  Car.find(function (err, allObjects) {
+    if (!err) {
+      res.json(allObjects);
+    } else {
+      res.send(err);
+    }
+  });
 });
-})
 
-app.delete('/delete/:id', (req,res) => {
-    Car.deleteById(req.params.id, function (err, found) {
-        if (!err) {
-            res.json({message: "Object deleted successfully"});
-        } else {
-            res.send(err)
-        }
+app.get("/find/:id", (req, res) => {
+  Car.findById(req.params.id, function (err, found) {
+    if (!err) {
+      res.json(found);
+    } else {
+      res.send(err);
+    }
+  });
 });
-})
 
+app.delete("/delete/:id", (req, res) => {
+  Car.deleteById(req.params.id, function (err, found) {
+    if (!err) {
+      res.json({ message: "Object deleted successfully" });
+    } else {
+      res.send(err);
+    }
+  });
+});
 
 app.listen(port, () => {
-  console.log(`EthairBalloons API listening at http://localhost:${port}`)
-})
+  console.log(`EthairBalloons API listening at http://localhost:${port}`);
+});
