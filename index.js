@@ -28,13 +28,14 @@ const Car = ethAirBalloonsProvider.createSchema({
     { name: "symtoms", type: "bytes32" },
   ],
 });
-Car.setAccount("0x9A6d82Ef3912d5aB60473124BCCd2f2A640769D7");
+
 
 app.get("/", (req, res) => {
   res.send("EthairBalloons CRUD API!");
 });
 
 app.get("/deploy", (req, res) => {
+  Car.setAccount('0xFCAd0B19bB29D4674531d6f115237E16AfCE377c')
   Car.deploy(function (err, success) {
     if (!err) {
       res.send("Contract deployed successfully!");
@@ -75,6 +76,7 @@ app.get("/find", (req, res) => {
     }
   });
 });
+
 
 app.get("/find/:id", (req, res) => {
   Car.findById(req.params.id, function (err, found) {
